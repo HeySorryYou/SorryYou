@@ -1,0 +1,35 @@
+Vm = input('Enter voltage peak amplitude Vm =');
+thetav =input('Enter voltage phase angle in degree thetav = ');
+Vm = 100; 
+thetav = 0; 
+Z = input('Enter magnitude of the load impedance Z = ');
+gama = input('Enter load phase angle in degree gama = ');
+thetai = thetav - gama;
+theta = (thetav - thetai)*pi/180;
+Im = Vm/Z; 
+wt=0:.05:2*pi;
+v=Vm*cos(wt); 
+i=Im*cos(wt + thetai*pi/180); 
+p=v.*i;                                         % Instantaneous power
+V=Vm/sqrt(2); I=Im/sqrt(2);                     % RMS voltage and current
+pr = V*I*cos(theta)*(1 + cos(2*wt)); % Eq. (2.6)
+px = V*I*sin(theta)*sin(2*wt); % Eq. (2.8)
+disp('(a) Estimate from the plots')
+P = max(pr)/2, Q = V*I*sin(theta)*sin(2*pi/4)
+P = P*ones(1, length(wt));                      % Average power for plot
+xline = zeros(1, length(wt));                   % generates a zero vector
+wt=180/pi*wt;                                   % converting radian to degree
+subplot(221), plot(wt, v, wt, i,wt, xline), grid
+title(['v(t)=Vm coswt, i(t)=Im cos(wt +',num2str(thetai),')'])
+xlabel('wt, degrees')
+subplot(222), plot(wt, p, wt, xline), grid
+title('p(t)=v(t) i(t)'), xlabel('wt, degrees')
+subplot(223), plot(wt, pr, wt, P, wt,xline), grid
+title('pr(t) Eq. 2.6'), xlabel('wt, degrees')
+subplot(224), plot(wt, px, wt, xline), 
+grid on
+title('px(t) Eq. 2.8'), xlabel('wt, degrees')
+subplot(111)
+disp('(b) From P and Q formulas using phasor values')
+P=V*I*cos(theta)                                  % Average power
+Q = V*I*sin(theta)                                % Reactive powe
